@@ -11,7 +11,7 @@ import java.lang.reflect.Array;
 import java.util.List;
 
 @Document(collection = "movies")
-// creates setter and setter
+// creates getter and setter
 @Data
 // creates constructors
 @AllArgsConstructor
