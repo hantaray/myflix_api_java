@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.Date;
 import java.util.List;
@@ -23,5 +24,6 @@ public class User {
     private String password;
     private String email;
     private Date birthday;
-    private List<ObjectId> favoriteMovies;
+    @DocumentReference
+    private List<Movie> favoriteMovies;
 }
