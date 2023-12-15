@@ -22,12 +22,7 @@ public class Movie {
     private String title;
     private String description;
     private List<Object> genres;
-    private String genre_name;
-    private String genre_description;
     private Object director;
-    private String director_name;
-    private String director_bio;
-    private String image_path;
+    private String imageURL;
     private Boolean featured;
-
 }
