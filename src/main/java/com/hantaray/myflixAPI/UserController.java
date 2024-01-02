@@ -4,12 +4,12 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +25,19 @@ public class UserController {
     @GetMapping("/{username}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable String username) {
         return new ResponseEntity<Optional<User>>(userService.singleUser(username), HttpStatus.OK);
+    }
+    @PostMapping
+    public ResponseEntity<User> addUser(@RequestBody Map<String, Object> payload) {
+        String username = payload.get("username").toString();
+        String password = payload.get("password").toString();
+        String email = payload.get("email").toString();
 
+        // Parse the birthday String to LocalDate
+        LocalDate birthday = LocalDate.parse(payload.get("birthday").toString());
+
+        // Convert LocalDate to Date if needed
+        Date birthdayDate = java.sql.Date.valueOf(birthday);
+
+        return new ResponseEntity<>(userService.addUser(username, password, email, birthdayDate), HttpStatus.CREATED);
     }
 }

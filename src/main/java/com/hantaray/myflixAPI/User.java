@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,4 +27,12 @@ public class User {
     private Date birthday;
     @DocumentReference
     private List<Movie> favoriteMovies;
+
+    public User(String username, String password, String email, Date birthday, List<Movie> favoriteMovies) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.birthday = birthday;
+        this.favoriteMovies = favoriteMovies;
+    }
 }
