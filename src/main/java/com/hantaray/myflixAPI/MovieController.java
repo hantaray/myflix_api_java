@@ -25,6 +25,15 @@ public class MovieController {
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Movie>> getSingleMovie(@PathVariable ObjectId id) {
         return new ResponseEntity<Optional<Movie>>(movieService.singleMovie(id), HttpStatus.OK);
+    }
+    @GetMapping("/director/{directorName}")
+    public ResponseEntity<Director> getDirector(@PathVariable String directorName) {
+        Optional<Director> director = movieService.getDirectorByName(directorName);
 
+        if (director.isPresent()) {
+            return new ResponseEntity<>(director.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
