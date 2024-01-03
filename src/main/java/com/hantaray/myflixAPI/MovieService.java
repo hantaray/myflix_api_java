@@ -35,4 +35,7 @@ public class MovieService {
         }
         return Optional.empty();
     }
+    public Optional<Movie> findMovieByName(String movieName) {
+        return movieRepository.findMovieByTitle(movieName);
+    }
 }

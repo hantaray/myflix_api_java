@@ -99,4 +99,8 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @PostMapping("/{username}/movies/{movieName}")
+    public ResponseEntity<String> addMovieToFavorite(@PathVariable String username, @PathVariable String movieName) {
+        return userService.addMovieToFavorite(username, movieName);
+    }
 }

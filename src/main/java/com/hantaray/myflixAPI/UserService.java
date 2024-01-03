@@ -14,6 +14,8 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MovieService movieService;
     public List<User> allUser(){
         return userRepository.findAll();
     }
@@ -41,5 +43,31 @@ public class UserService {
     }
     public User updateUser(User user) {
         return userRepository.save(user);
+    }
+    public ResponseEntity<String> addMovieToFavorite(String username, String movieName) {
+        Optional<User> optionalUser = userRepository.findUserByUsername(username);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Optional<Movie> optionalMovie = movieService.findMovieByName(movieName);
+
+            if (optionalMovie.isPresent()) {
+                Movie movie = optionalMovie.get();
+                List<Movie> favoriteMovies = user.getFavoriteMovies();
+
+                // Check if the movie is not already in favorites
+                if (!favoriteMovies.contains(movie)) {
+                    favoriteMovies.add(movie);
+                    userRepository.save(user);
+                    return new ResponseEntity<>("Movie added to favorites", HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Movie is already in favorites", HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return new ResponseEntity<>("Movie not found", HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 }
