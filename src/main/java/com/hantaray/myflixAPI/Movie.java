@@ -21,8 +21,8 @@ public class Movie {
     private ObjectId id;
     private String title;
     private String description;
-    private List<Object> genres;
-    private Object director;
+    private List<Genre> genres;
+    private Director director;
     private String imageURL;
     private Boolean featured;
 }
