@@ -26,4 +26,7 @@ public class UserService {
 
         user.ifPresent(u -> userRepository.deleteById(u.getId()));
     }
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
 }

@@ -51,4 +51,46 @@ public class UserController {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
     }
+    @PutMapping("/{username}")
+    public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody Map<String, Object> updatedFields) {
+        Optional<User> user = userService.singleUser(username);
+
+        if (user.isPresent()) {
+            User existingUser = user.get();
+
+            // Update fields of the existing user with new values from the map
+            for (Map.Entry<String, Object> entry : updatedFields.entrySet()) {
+                String fieldName = entry.getKey();
+                Object fieldValue = entry.getValue();
+
+                // Handle each field individually, update only if the value is not null
+                switch (fieldName) {
+                    case "username":
+                        if (fieldValue != null) {
+                            existingUser.setUsername(fieldValue.toString());
+                        }
+                        break;
+                    case "password":
+                        if (fieldValue != null) {
+                            existingUser.setPassword(fieldValue.toString());
+                        }
+                        break;
+                    case "email":
+                        if (fieldValue != null) {
+                            existingUser.setEmail(fieldValue.toString());
+                        }
+                        break;
+                    default:
+                        // Ignore unknown fields
+                        break;
+                }
+            }
+            // Save the updated user to the database
+            User updatedUserEntity = userService.updateUser(existingUser);
+
+            return new ResponseEntity<>(updatedUserEntity, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
