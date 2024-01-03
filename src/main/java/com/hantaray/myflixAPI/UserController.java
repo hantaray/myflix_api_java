@@ -27,7 +27,7 @@ public class UserController {
         return new ResponseEntity<>(userService.singleUser(username), HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<?> addUser(@RequestBody Map<String, Object> payload) {
         String username = payload.get("username").toString();
         String password = payload.get("password").toString();
         String email = payload.get("email").toString();
@@ -38,7 +38,13 @@ public class UserController {
         // Convert LocalDate to Date if needed
         Date birthdayDate = java.sql.Date.valueOf(birthday);
 
-        return new ResponseEntity<>(userService.addUser(username, password, email, birthdayDate), HttpStatus.CREATED);
+        ResponseEntity<String> response = userService.addUser(username, password, email, birthdayDate);
+
+        if (response.getStatusCode() == HttpStatus.CREATED) {
+            return new ResponseEntity<>(response.getBody(), HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(response.getBody(), HttpStatus.BAD_REQUEST);
+        }
     }
     @DeleteMapping("/{username}")
     public ResponseEntity<String> deleteUser(@PathVariable String username) {
