@@ -70,4 +70,21 @@ public class UserService {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
     }
+    public Optional<User> removeMovieFromFavorites(String username, String movieName) {
+        Optional<User> optionalUser = userRepository.findUserByUsername(username);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            Optional<Movie> optionalMovie = movieService.findMovieByName(movieName);
+
+            if (optionalMovie.isPresent()) {
+                Movie movie = optionalMovie.get();
+
+                // Remove the movie from the favorites list
+                user.getFavoriteMovies().remove(movie);
+                userRepository.save(user);
+            }
+        }
+        return optionalUser;
+    }
 }

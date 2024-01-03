@@ -103,4 +103,14 @@ public class UserController {
     public ResponseEntity<String> addMovieToFavorite(@PathVariable String username, @PathVariable String movieName) {
         return userService.addMovieToFavorite(username, movieName);
     }
+    @DeleteMapping("/{username}/movies/{movieName}")
+    public ResponseEntity<?> removeMovieFromFavorites(@PathVariable String username, @PathVariable String movieName) {
+        Optional<User> optionalUser = userService.removeMovieFromFavorites(username, movieName);
+
+        if (optionalUser.isPresent()) {
+            return new ResponseEntity<>("Movie removed from favorites.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User not found.", HttpStatus.NOT_FOUND);
+        }
+    }
 }
