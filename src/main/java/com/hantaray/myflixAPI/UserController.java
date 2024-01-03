@@ -24,7 +24,7 @@ public class UserController {
     }
     @GetMapping("/{username}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable String username) {
-        return new ResponseEntity<Optional<User>>(userService.singleUser(username), HttpStatus.OK);
+        return new ResponseEntity<>(userService.singleUser(username), HttpStatus.OK);
     }
     @PostMapping
     public ResponseEntity<User> addUser(@RequestBody Map<String, Object> payload) {
@@ -39,5 +39,16 @@ public class UserController {
         Date birthdayDate = java.sql.Date.valueOf(birthday);
 
         return new ResponseEntity<>(userService.addUser(username, password, email, birthdayDate), HttpStatus.CREATED);
+    }
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+        Optional<User> user = userService.singleUser(username);
+
+        if (user.isPresent()) {
+            userService.deleteUserByName(username);
+            return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -1,8 +1,6 @@
 package com.hantaray.myflixAPI;
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,9 +18,12 @@ public class UserService {
     public Optional<User> singleUser(String username){
         return userRepository.findUserByUsername(username);
     }
-
     public User addUser(String username, String password, String email, Date birthday) {
-        User user = userRepository.insert(new User(username, password, email, birthday, new ArrayList<>()));
-        return user;
+        return userRepository.insert(new User(username, password, email, birthday, new ArrayList<>()));
+    }
+    public void deleteUserByName(String username) {
+        Optional<User> user = userRepository.findUserByUsername(username);
+
+        user.ifPresent(u -> userRepository.deleteById(u.getId()));
     }
 }
