@@ -27,4 +27,12 @@ public class MovieService {
         Optional<Movie> movie = movieRepository.findMovieByDirector_Name(directorName);
         return movie.map(Movie::getDirector);
     }
+    public Optional<Movie> getMovieByGenreName(String genreName) {
+        List<Movie> movies = movieRepository.findMoviesByGenres_Name(genreName);
+
+        if (!movies.isEmpty()) {
+            return Optional.of(movies.get(0));
+        }
+        return Optional.empty();
+    }
 }

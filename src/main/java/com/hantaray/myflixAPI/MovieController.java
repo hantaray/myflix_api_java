@@ -36,4 +36,17 @@ public class MovieController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/genres/{genreName}")
+    public ResponseEntity<Genre> getGenre(@PathVariable String genreName) {
+        Optional<Movie> movie = movieService.getMovieByGenreName(genreName);
+
+        if (movie.isPresent()) {
+            Genre firstGenre = movie.get().getGenres().stream().findFirst().orElse(null);
+
+            if (firstGenre != null) {
+                return new ResponseEntity<>(firstGenre, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }
