@@ -4,6 +4,7 @@ package com.hantaray.myflixAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class UserController {
     // Autowired instantiates class
     @Autowired
     private UserService userService;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(){
         return new ResponseEntity<List<User>>(userService.allUser(), HttpStatus.OK);
@@ -29,7 +31,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> addUser(@RequestBody Map<String, Object> payload) {
         String username = payload.get("username").toString();
-        String password = payload.get("password").toString();
+        String password = bCryptPasswordEncoder.encode(payload.get("password").toString());
         String email = payload.get("email").toString();
 
         // Parse the birthday String to LocalDate
