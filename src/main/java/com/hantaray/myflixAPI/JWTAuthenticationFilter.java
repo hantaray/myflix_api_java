@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.hantaray.myflixAPI.SecurityConstants.EXPIRATION_TIME;
+import static com.hantaray.myflixAPI.SecurityConstants.SECRET;
+
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
