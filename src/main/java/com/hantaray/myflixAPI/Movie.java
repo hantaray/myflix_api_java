@@ -25,4 +25,5 @@ public class Movie {
     private Director director;
     private String imageURL;
     private Boolean featured;
+
 }
