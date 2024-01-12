@@ -4,6 +4,11 @@ package com.hantaray.myflixAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -22,6 +27,29 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers(){
         return new ResponseEntity<List<User>>(userService.allUser(), HttpStatus.OK);
     }
+    @Autowired
+    AuthenticationManager authManager;
+    @Autowired JwtTokenUtil jwtUtil;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(
+            @RequestParam String username,
+            @RequestParam String password) {
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+
+            User user = (User) authentication.getPrincipal();
+            String accessToken = jwtUtil.generateAccessToken(user);
+            AuthResponse response = new AuthResponse(user.getEmail(), accessToken);
+
+            return ResponseEntity.ok().body(response);
+
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
     @GetMapping("/{username}")
     public ResponseEntity<Optional<User>> getUser(@PathVariable String username) {
         return new ResponseEntity<>(userService.singleUser(username), HttpStatus.OK);
@@ -29,7 +57,8 @@ public class UserController {
     @PostMapping
     public ResponseEntity<?> addUser(@RequestBody Map<String, Object> payload) {
         String username = payload.get("username").toString();
-        String password = payload.get("password").toString();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String password = passwordEncoder.encode(payload.get("password").toString());
         String email = payload.get("email").toString();
 
         // Parse the birthday String to LocalDate
