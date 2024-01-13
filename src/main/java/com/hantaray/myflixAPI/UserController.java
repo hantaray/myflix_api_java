@@ -8,8 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -23,6 +21,7 @@ public class UserController {
     // Autowired instantiates class
     @Autowired
     private UserService userService;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers(){
         return new ResponseEntity<List<User>>(userService.allUser(), HttpStatus.OK);
@@ -59,8 +58,7 @@ public class UserController {
         String username = payload.get("username").toString();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String password = passwordEncoder.encode(payload.get("password").toString());
-        String email = payload.get("email").toString();
-
+      
         // Parse the birthday String to LocalDate
         LocalDate birthday = LocalDate.parse(payload.get("birthday").toString());
 
