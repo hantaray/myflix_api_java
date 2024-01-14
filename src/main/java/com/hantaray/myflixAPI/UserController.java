@@ -42,7 +42,7 @@ public class UserController {
 
             User user = (User) authentication.getPrincipal();
             String accessToken = jwtUtil.generateAccessToken(user);
-            AuthResponse response = new AuthResponse(user.getEmail(), accessToken);
+            AuthResponse response = new AuthResponse(user.getUsername(), accessToken);
 
             return ResponseEntity.ok().body(response);
 
